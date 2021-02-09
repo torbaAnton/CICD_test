@@ -51,7 +51,6 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-        working-directory: ./CICD_test
 
       - name: Azure WebApp
         uses: Azure/webapps-deploy@v2
