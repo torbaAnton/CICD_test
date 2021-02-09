@@ -1,0 +1,14 @@
+version: "3"
+
+networks:
+  test:
+
+services:
+  app:
+    build: .
+    image: madeirauno/dockerhub:myfirstimagepush
+    ports:
+      - "8080:8080"
+    networks:
+      - test
+
