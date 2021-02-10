@@ -7,10 +7,11 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
-          - name: Set up JDK
-            uses: actions/setup-java@v1
-            with:
-              java-version: 1.8
+        - name: Set up JDK
+          uses: actions/setup-java@v1
+          with:
+            java-version: 1.8
+
         # checkout the repo
         - name: 'Checkout GitHub Action'
           uses: actions/checkout@master
