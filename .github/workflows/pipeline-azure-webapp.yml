@@ -42,7 +42,7 @@ jobs:
   build-deploy:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    needs: [sonarcloud, tests]
+    needs: [sonarcloud, codecov-tests]
     steps:
       - uses: actions/checkout@v2
 
