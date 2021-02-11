@@ -1,8 +1,10 @@
-name: Java CI with Maven
+name: Java Azure Web App CI with Maven
 
 on:
   push:
     branches: [ master ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   tests:
@@ -24,7 +26,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
   sonarcloud:
     runs-on: ubuntu-latest
-    needs: tests
     steps:
       - uses: actions/checkout@v2
 
@@ -38,9 +39,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=torbaAnton_CICD_test -Dsonar.organization=torbaanton -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
-  deploy:
+  build-deploy:
+    if: github.event_name != 'pull_request' && github.ref == refs/heads/master
     runs-on: ubuntu-latest
-    needs: sonarcloud
+    needs: [sonarcloud, tests]
     steps:
       - uses: actions/checkout@v2
 
@@ -48,6 +50,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
+
+        #to delete
+        run: echo github.ref
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
