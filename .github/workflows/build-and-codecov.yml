@@ -1,12 +1,6 @@
 name: Build and Code Cov
 
 on: workflow_dispatch
-#  pull_request:
-#    branches:
-#      - '*'
-#  push:
-#    branches:
-#      - 'master'
 
 jobs:
   build:
