@@ -59,7 +59,7 @@ jobs:
         ## commented block
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn package -DskipTests --file pom.xml
 
       - name: Azure WebApp
         uses: Azure/webapps-deploy@v2
