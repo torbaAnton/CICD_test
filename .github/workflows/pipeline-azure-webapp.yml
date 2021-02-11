@@ -40,9 +40,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=torbaAnton_CICD_test -Dsonar.organization=torbaanton -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=./target/site/jacoco/jacoco.xml
   build-deploy:
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    if: github.event_name != 'pull_request' # && github.ref == 'refs/heads/master' not necessary
     runs-on: ubuntu-latest
-    needs: [sonarcloud, codecov-tests]
+    needs: [ sonarcloud, codecov-tests ]
     steps:
       - uses: actions/checkout@v2
 
@@ -51,11 +51,12 @@ jobs:
         with:
           java-version: 1.8
 
-        #to delete
+        ## to delete
       - name: Verify run id
         run: echo Run Id $GITHUB_RUN_ID
       - name: Output the branch name
         run: echo $(echo $GITHUB_REF | cut -d'/' -f 3)
+        ## commented block
 
       - name: Build with Maven
         run: mvn -B package --file pom.xml
