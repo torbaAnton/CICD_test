@@ -52,6 +52,7 @@ jobs:
           java-version: 1.8
 
         #to delete
+      - name: Check branch name
         run: echo github.ref
 
       - name: Build with Maven
