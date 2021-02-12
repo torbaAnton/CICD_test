@@ -15,10 +15,10 @@ variables:
   azureSubscription: 'a6c51175-f8cd-4d1b-86fd-987f10b4bc31'
 
   # Web app name
-  webAppName: 'cicd-github-actions'
+  webAppName: 'cicd-azure-devops'
 
   # Environment name
-  environmentName: 'cicd-github-actions'
+  environmentName: 'cicd-azure-devops'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -63,7 +63,7 @@ stages:
         deploy:
           steps:
           - task: AzureWebApp@1
-            displayName: 'Azure Web App Deploy: cicd-github-actions'
+            displayName: 'Azure Web App Deploy: cicd-azure-devops'
             inputs:
               azureSubscription: $(azureSubscription)
               appType: webAppLinux
