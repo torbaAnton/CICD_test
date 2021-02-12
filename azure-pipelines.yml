@@ -40,7 +40,7 @@ stages:
     - task: PublishCodeCoverageResults@1
       inputs:
         #codeCoverageTool: 'JaCoCo' # Options: cobertura, jaCoCo
-        summaryFileLocation: $(System.DefaultWorkingDirectory)/cicd_test/**/site/jacoco/jacoco.xml
+        summaryFileLocation: $(System.DefaultWorkingDirectory)/**/site/jacoco/jacoco.xml
 
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
