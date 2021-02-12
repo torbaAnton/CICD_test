@@ -37,6 +37,10 @@ stages:
       displayName: 'Maven Package'
       inputs:
         mavenPomFile: 'pom.xml'
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        #codeCoverageTool: 'JaCoCo' # Options: cobertura, jaCoCo
+        summaryFileLocation: $(System.DefaultWorkingDirectory)/cicd_test/**/site/jacoco/jacoco.xml
 
     - task: CopyFiles@2
       displayName: 'Copy Files to artifact staging directory'
