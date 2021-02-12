@@ -5,10 +5,10 @@
 
 trigger: [ master ]
 pr:
-  autoCancel: false
+  autoCancel: true # default is true
   branches:
     include:
-    - master
+      - master
 variables:
 
   # Azure Resource Manager connection created during pipeline creation
@@ -24,52 +24,52 @@ variables:
   vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build
-  displayName: Build stage
-  jobs:
-  - job: MavenPackageAndPublishArtifacts
-    displayName: Maven Package and Publish Artifacts
-    pool:
-      vmImage: $(vmImageName)
+  - stage: Build
+    displayName: Build stage
+    jobs:
+      - job: MavenPackageAndPublishArtifacts
+        displayName: Maven Package and Publish Artifacts
+        pool:
+          vmImage: $(vmImageName)
 
-    steps:
-    - task: Maven@3
-      displayName: 'Maven Package'
-      inputs:
-        mavenPomFile: 'pom.xml'
-    - task: PublishCodeCoverageResults@1
-      inputs:
-        #codeCoverageTool: 'JaCoCo' # Options: cobertura, jaCoCo
-        summaryFileLocation: $(System.DefaultWorkingDirectory)/**/site/jacoco/jacoco.xml
-
-    - task: CopyFiles@2
-      displayName: 'Copy Files to artifact staging directory'
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: '**/target/*.?(war|jar)'
-        TargetFolder: $(Build.ArtifactStagingDirectory)
-
-    - upload: $(Build.ArtifactStagingDirectory)
-      artifact: drop
-
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-  condition: and(succeeded(), eq(variables['TriggeringArtifactSourceBranchName'], 'merge'))
-  jobs:
-  - deployment: DeployLinuxWebApp
-    displayName: Deploy Linux Web App
-    environment: $(environmentName)
-    pool:
-      vmImage: $(vmImageName)
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureWebApp@1
-            displayName: 'Azure Web App Deploy: cicd-azure-devops'
+        steps:
+          - task: Maven@3
+            displayName: 'Maven Package'
             inputs:
-              azureSubscription: $(azureSubscription)
-              appType: webAppLinux
-              appName: $(webAppName)
-              package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
+              mavenPomFile: 'pom.xml'
+          - task: PublishCodeCoverageResults@1
+            inputs:
+              #codeCoverageTool: 'JaCoCo' # Options: cobertura, jaCoCo
+              summaryFileLocation: $(System.DefaultWorkingDirectory)/**/site/jacoco/jacoco.xml
+
+          - task: CopyFiles@2
+            displayName: 'Copy Files to artifact staging directory'
+            inputs:
+              SourceFolder: '$(System.DefaultWorkingDirectory)'
+              Contents: '**/target/*.?(war|jar)'
+              TargetFolder: $(Build.ArtifactStagingDirectory)
+
+          - upload: $(Build.ArtifactStagingDirectory)
+            artifact: drop
+
+  - stage: Deploy
+    displayName: Deploy stage
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - deployment: DeployLinuxWebApp
+        displayName: Deploy Linux Web App
+        environment: $(environmentName)
+        pool:
+          vmImage: $(vmImageName)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureWebApp@1
+                  displayName: 'Azure Web App Deploy: cicd-azure-devops'
+                  inputs:
+                    azureSubscription: $(azureSubscription)
+                    appType: webAppLinux
+                    appName: $(webAppName)
+                    package: '$(Pipeline.Workspace)/drop/**/target/*.?(war|jar)'
