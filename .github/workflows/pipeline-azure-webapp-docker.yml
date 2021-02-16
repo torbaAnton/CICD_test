@@ -47,8 +47,6 @@ jobs:
   build-deploy:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    env:
-      APP_NAME: 'cicd-github-actions-docker'
     needs: [ sonarcloud, codecov-tests ]
     steps:
       - uses: actions/checkout@v2
@@ -76,7 +74,7 @@ jobs:
 
       - uses: azure/webapps-deploy@v2
         with:
-          app-name: '$APP_NAME'
+          app-name: 'cicd-github-actions-docker'
           images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/app:${{ github.sha }}'
 
       - name: Azure logout
