@@ -10,7 +10,7 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class HealthCheckControllerTest {
 
-    private static final String expectedResponse = "OK";
+    private static final String expectedResponse = "OK!";
 
     @InjectMocks
     private HealthCheckController healthCheckController;
