@@ -61,9 +61,27 @@ jobs:
       - name: Build with Maven
         run: mvn -B package -DskipTests --file pom.xml
 
-      - name: Azure WebApp
-        uses: Azure/webapps-deploy@v2
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
         with:
-          app-name: cicd-github-actions
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: target/*.jar
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          mvn -B package --file pom.xml
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/app:${{ github.sha }}
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/app:${{ github.sha }}
+
+      - uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'cicd-github-actions'
+          images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/app:${{ github.sha }}'
+
+      - name: Azure logout
+        run: |
+          az logout
