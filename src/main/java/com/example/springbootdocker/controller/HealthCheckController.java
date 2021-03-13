@@ -1,11 +1,13 @@
 package com.example.springbootdocker.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 public class HealthCheckController {
 
     @Value("${endpoint-message}")
@@ -22,4 +24,5 @@ public class HealthCheckController {
     public String propertyMessageEndpoint (){
         return String.format("Message is: %s", message);
     }
+
 }
