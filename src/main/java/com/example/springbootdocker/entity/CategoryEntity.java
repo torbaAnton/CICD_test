@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
@@ -21,7 +22,8 @@ import java.util.List;
 @NoArgsConstructor
 @ToString(exclude = "products")
 @Builder(toBuilder = true)
-@Entity(name = "categories")
+@Entity
+@Table (name="categories")
 public class CategoryEntity {
 
     @Id

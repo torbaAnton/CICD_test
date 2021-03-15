@@ -10,11 +10,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
-    String GET_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL = "select p.* from products p inner join products_categories pc on p.id = pc.product_id where pc.category_id = :categoryId and (:name is null or p.name LIKE %:name%) and (:priceFrom is null or p.price > :priceFrom) and (:priceTo is null or p.price < :priceTo)";
-    String COUNT_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL = "select count(1) from (" + GET_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL + ")";
+    String GET_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL = "select p.* from products p inner join products_categories pc on p.id = pc.product_id where pc.category_id = :categoryId and (:name is null or p.name LIKE %:name%) and (:priceFrom is null or p.price >= :priceFrom) and (:priceTo is null or p.price <= :priceTo)";
+    String COUNT_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL = "select count(1) from (" + GET_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL + ") as products";
 
-    String GET_PRODUCTS_WITH_NAME_CONTAINING_AND_PRICE_IS_IN_RANGE_OPTIONALS = "select p.* from products p where (:name is null or p.name LIKE %:name%) and (:priceFrom is null or p.price > :priceFrom) and (:priceTo is null or p.price < :priceTo)";
-    String COUNT_PRODUCTS_WITH_NAME_CONTAINING_AND_PRICE_IS_IN_RANGE_OPTIONALS = "select count(1) from (" + GET_PRODUCTS_WITH_NAME_CONTAINING_AND_PRICE_IS_IN_RANGE_OPTIONALS + ")";
+    String GET_PRODUCTS_WITH_NAME_CONTAINING_AND_PRICE_IS_IN_RANGE_OPTIONALS = "select p.* from products p where (:name is null or p.name LIKE %:name%) and (:priceFrom is null or p.price >= :priceFrom) and (:priceTo is null or p.price <= :priceTo)";
+    String COUNT_PRODUCTS_WITH_NAME_CONTAINING_AND_PRICE_IS_IN_RANGE_OPTIONALS = "select count(1) from (" + GET_PRODUCTS_WITH_NAME_CONTAINING_AND_PRICE_IS_IN_RANGE_OPTIONALS + ") as products";
 
 
     @Query(value = GET_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL, countQuery = COUNT_PRODUCTS_ASSOCIATED_WITH_CATEGORY_SQL, nativeQuery = true)

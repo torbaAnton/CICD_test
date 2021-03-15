@@ -20,6 +20,10 @@ import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+/**
+ * Initial data inserted to db through resources/test_data.sql script
+ */
+
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = {"classpath:test_data.sql"})
@@ -29,6 +33,10 @@ class ProductControllerIntegrationTest {
     private final static String UPDATE_PRODUCT_REQUEST = getFileContent("data/product/request/update-product.json");
 
     private final static String GET_PRODUCTS_RESPONSE = getFileContent("data/product/response/get-products.json");
+    private final static String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = getFileContent("data/product/response/get-products-filtered-by-name.json");
+    private final static String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = getFileContent("data/product/response/get-products-filtered-by-price-in-range.json");
+    private final static String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = getFileContent("data/product/response/get-products-sorted-by-name.json");
+    private final static String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = getFileContent("data/product/response/get-products-sorted-by-price.json");
     private final static String GET_PRODUCT_BY_ID_RESPONSE = getFileContent("data/product/response/get-product-by-id.json");
     private final static String CREATE_PRODUCT_RESPONSE = getFileContent("data/product/response/create-product.json");
     private final static String UPDATE_PRODUCT_RESPONSE = getFileContent("data/product/response/update-product.json");
@@ -53,7 +61,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    public void shouldRetrieveOrders() {
+    public void shouldRetrieveProducts() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
         ResponseEntity<String> actualResponse = this.restTemplate
@@ -93,6 +101,46 @@ class ProductControllerIntegrationTest {
                 .exchange(createURLWithPort("api/products/1"), HttpMethod.DELETE, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
         assertThat(actualResponse.getBody()).isEqualTo(null);
+    }
+
+    @Test
+    public void shouldRetrieveProductsFilteredByNameContaining() {
+        httpEntity = new HttpEntity<>(null, httpHeaders);
+
+        ResponseEntity<String> actualResponse = this.restTemplate
+                .exchange(createURLWithPort("/api/products?name=mil"), HttpMethod.GET, httpEntity, String.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+    }
+
+    @Test
+    public void shouldRetrieveProductsFilteredByPriceInRange() {
+        httpEntity = new HttpEntity<>(null, httpHeaders);
+
+        ResponseEntity<String> actualResponse = this.restTemplate
+                .exchange(createURLWithPort("/api/products?priceFrom=1&priceTo=3"), HttpMethod.GET, httpEntity, String.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+    }
+
+    @Test
+    public void shouldRetrieveProductsSortedByName() {
+        httpEntity = new HttpEntity<>(null, httpHeaders);
+
+        ResponseEntity<String> actualResponse = this.restTemplate
+                .exchange(createURLWithPort("/api/products?sortBy=name"), HttpMethod.GET, httpEntity, String.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_SORTED_BY_NAME_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+    }
+
+    @Test
+    public void shouldRetrieveProductsSortedByPrice() {
+        httpEntity = new HttpEntity<>(null, httpHeaders);
+
+        ResponseEntity<String> actualResponse = this.restTemplate
+                .exchange(createURLWithPort("/api/products?sortBy=price"), HttpMethod.GET, httpEntity, String.class);
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
     }
 
     private String createURLWithPort(String uri) {
