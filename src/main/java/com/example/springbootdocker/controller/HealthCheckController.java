@@ -16,7 +16,7 @@ public class HealthCheckController {
     @Operation(summary = "Simple health check endpoint")
     @GetMapping("/check")
     public String healthCheckEndpoint (){
-        return "OK!";
+        return "OK";
     }
 
     @Operation(summary = "Property message check endpoint")
