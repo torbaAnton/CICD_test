@@ -1,22 +1,18 @@
 package com.example.springbootdocker.controller;
 
 import com.example.springbootdocker.SpringBootDockerApplication;
+import com.example.springbootdocker.utils.TestHelperUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,9 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"classpath:test_data.sql"})
 class CategoryProductsControllerTest {
 
-    private final static String GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE = getFileContent("data/category_products/response/get-products-by-category-id.json");
-    private final static String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_NAME_RESPONSE = getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-name.json");
-    private final static String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-price-in-range.json");
+    private static final String GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id.json", CategoryProductsControllerTest.class);
+    private static final String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-name.json", CategoryProductsControllerTest.class);
+    private static final String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-price-in-range.json", CategoryProductsControllerTest.class);
 
     @LocalServerPort
     private int port;
@@ -52,7 +48,7 @@ class CategoryProductsControllerTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/categories/1/products"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE);
     }
 
     @Test
@@ -88,7 +84,7 @@ class CategoryProductsControllerTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/categories/1/products?name=mea"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_NAME_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_NAME_RESPONSE);
     }
 
     @Test
@@ -102,20 +98,12 @@ class CategoryProductsControllerTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/categories/1/products?priceFrom=1&priceTo=3"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_PRICE_IN_RANGE_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_PRICE_IN_RANGE_RESPONSE);
     }
 
     private String createURLWithPort(String uri) {
         return "http://localhost:" + port + uri;
     }
 
-    private static String getFileContent(String filePath) {
-        ClassPathResource resource =
-                new ClassPathResource(filePath, ProductControllerIntegrationTest.class.getClassLoader());
-        try {
-            return new String(Files.readAllBytes(resource.getFile().toPath()), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read the expected data from json file!", e);
-        }
-    }
+
 }

@@ -6,6 +6,7 @@ import com.example.springbootdocker.response.PageResponse;
 import com.example.springbootdocker.request.CategoryRequest;
 import com.example.springbootdocker.response.CategoryResponse;
 import com.example.springbootdocker.service.CategoryService;
+import com.example.springbootdocker.utils.PageResponseUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,15 +63,7 @@ public class CategoryController {
                 = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Category> categoryPage = categoryService.getAllCategories(pageRequest);
 
-        return PageResponse.<Category>builder()
-                .content(categoryPage.getContent())
-                .size(categoryPage.getSize())
-                .page(categoryPage.getNumber())
-                .sortBy(sortBy)
-                .direction(direction)
-                .totalElements(categoryPage.getTotalElements())
-                .totalPages(categoryPage.getTotalPages())
-                .build();
+        return PageResponseUtils.getCategoryPageResponse(direction, sortBy, categoryPage);
     }
 
     @PutMapping(path = "/{categoryId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

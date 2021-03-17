@@ -1,22 +1,18 @@
 package com.example.springbootdocker.controller;
 
 import com.example.springbootdocker.SpringBootDockerApplication;
+import com.example.springbootdocker.utils.TestHelperUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,15 +25,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"classpath:test_data.sql"})
 class CategoryControllerIntegrationTest {
 
-    private final static String CREATE_CATEGORY_REQUEST = getFileContent("data/category/request/create-category.json");
-    private final static String UPDATE_CATEGORY_REQUEST = getFileContent("data/category/request/update-category.json");
+    private static final String CREATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/create-category.json", CategoryControllerIntegrationTest.class);
+    private static final String UPDATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/update-category.json", CategoryControllerIntegrationTest.class);
 
-    private final static String GET_CATEGORIES_RESPONSE = getFileContent("data/category/response/get-categories.json");
-    private final static String GET_CATEGORIES_SORTED_BY_NAME_RESPONSE = getFileContent("data/category/response/get-categories-sorted-by-name.json");
-    private final static String GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE = getFileContent("data/category/response/get-categories-sorted-by-productCount.json");
-    private final static String GET_CATEGORY_BY_ID_RESPONSE = getFileContent("data/category/response/get-category-by-id.json");
-    private final static String CREATE_CATEGORY_RESPONSE = getFileContent("data/category/response/create-category.json");
-    private final static String UPDATE_CATEGORY_RESPONSE = getFileContent("data/category/response/update-category.json");
+    private static final String GET_CATEGORIES_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories.json", CategoryControllerIntegrationTest.class);
+    private static final String GET_CATEGORIES_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-name.json", CategoryControllerIntegrationTest.class);
+    private static final String GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-productCount.json", CategoryControllerIntegrationTest.class);
+    private static final String GET_CATEGORY_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-category-by-id.json", CategoryControllerIntegrationTest.class);
+    private static final String CREATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/create-category.json", CategoryControllerIntegrationTest.class);
+    private static final String UPDATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/update-category.json", CategoryControllerIntegrationTest.class);
 
     @LocalServerPort
     private int port;
@@ -55,7 +51,7 @@ class CategoryControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/categories/1"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORY_BY_ID_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORY_BY_ID_RESPONSE);
     }
 
     @Test
@@ -65,29 +61,29 @@ class CategoryControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/categories"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORIES_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORIES_RESPONSE);
     }
 
     @Test
     public void shouldCreateCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpEntity = new HttpEntity<>(CREATE_CATEGORY_REQUEST.replaceAll("[\\s+\\r\\n]", ""), httpHeaders);
+        httpEntity = new HttpEntity<>(CREATE_CATEGORY_REQUEST, httpHeaders);
 
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/categories"), HttpMethod.POST, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(actualResponse.getBody()).isEqualTo(CREATE_CATEGORY_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(CREATE_CATEGORY_RESPONSE);
     }
 
     @Test
     public void shouldUpdateCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpEntity = new HttpEntity<>(UPDATE_CATEGORY_REQUEST.replaceAll("[\\s+\\r\\n]", ""), httpHeaders);
+        httpEntity = new HttpEntity<>(UPDATE_CATEGORY_REQUEST, httpHeaders);
 
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/categories/1"), HttpMethod.PUT, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(UPDATE_CATEGORY_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(UPDATE_CATEGORY_RESPONSE);
     }
 
     @Test
@@ -108,7 +104,7 @@ class CategoryControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/categories?sortBy=name"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORIES_SORTED_BY_NAME_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORIES_SORTED_BY_NAME_RESPONSE);
     }
 
     @Test
@@ -118,20 +114,11 @@ class CategoryControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/categories?sortBy=productCount"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE);
     }
 
     private String createURLWithPort(String uri) {
         return "http://localhost:" + port + uri;
     }
 
-    private static String getFileContent(String filePath) {
-        ClassPathResource resource =
-                new ClassPathResource(filePath, ProductControllerIntegrationTest.class.getClassLoader());
-        try {
-            return new String(Files.readAllBytes(resource.getFile().toPath()), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read the expected data from json file!", e);
-        }
-    }
 }

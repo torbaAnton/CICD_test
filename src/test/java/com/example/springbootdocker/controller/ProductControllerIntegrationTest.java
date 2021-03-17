@@ -1,6 +1,7 @@
 package com.example.springbootdocker.controller;
 
 import com.example.springbootdocker.SpringBootDockerApplication;
+import com.example.springbootdocker.utils.TestHelperUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,17 +30,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = {"classpath:test_data.sql"})
 class ProductControllerIntegrationTest {
 
-    private final static String CREATE_PRODUCT_REQUEST = getFileContent("data/product/request/create-product.json");
-    private final static String UPDATE_PRODUCT_REQUEST = getFileContent("data/product/request/update-product.json");
+    private static final String CREATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/create-product.json", ProductControllerIntegrationTest.class);
+    private static final String UPDATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/update-product.json", ProductControllerIntegrationTest.class);
 
-    private final static String GET_PRODUCTS_RESPONSE = getFileContent("data/product/response/get-products.json");
-    private final static String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = getFileContent("data/product/response/get-products-filtered-by-name.json");
-    private final static String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = getFileContent("data/product/response/get-products-filtered-by-price-in-range.json");
-    private final static String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = getFileContent("data/product/response/get-products-sorted-by-name.json");
-    private final static String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = getFileContent("data/product/response/get-products-sorted-by-price.json");
-    private final static String GET_PRODUCT_BY_ID_RESPONSE = getFileContent("data/product/response/get-product-by-id.json");
-    private final static String CREATE_PRODUCT_RESPONSE = getFileContent("data/product/response/create-product.json");
-    private final static String UPDATE_PRODUCT_RESPONSE = getFileContent("data/product/response/update-product.json");
+    private static final String GET_PRODUCTS_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-name.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-price-in-range.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-name.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-price.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCT_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-product-by-id.json", ProductControllerIntegrationTest.class);
+    private static final String CREATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/create-product.json", ProductControllerIntegrationTest.class);
+    private static final String UPDATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/update-product.json", ProductControllerIntegrationTest.class);
 
     @LocalServerPort
     private int port;
@@ -57,7 +58,7 @@ class ProductControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/products/1"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCT_BY_ID_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCT_BY_ID_RESPONSE);
     }
 
     @Test
@@ -67,29 +68,29 @@ class ProductControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/products"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_RESPONSE);
     }
 
     @Test
     public void shouldCreateProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpEntity = new HttpEntity<>(CREATE_PRODUCT_REQUEST.replaceAll("[\\s+\\r\\n]", ""), httpHeaders);
+        httpEntity = new HttpEntity<>(CREATE_PRODUCT_REQUEST, httpHeaders);
 
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/products"), HttpMethod.POST, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(actualResponse.getBody()).isEqualTo(CREATE_PRODUCT_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(CREATE_PRODUCT_RESPONSE);
     }
 
     @Test
     public void shouldUpdateProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpEntity = new HttpEntity<>(UPDATE_PRODUCT_REQUEST.replaceAll("[\\s+\\r\\n]", ""), httpHeaders);
+        httpEntity = new HttpEntity<>(UPDATE_PRODUCT_REQUEST, httpHeaders);
 
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("api/products/1"), HttpMethod.PUT, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(UPDATE_PRODUCT_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(UPDATE_PRODUCT_RESPONSE);
     }
 
     @Test
@@ -110,7 +111,7 @@ class ProductControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/products?name=mil"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE);
     }
 
     @Test
@@ -120,7 +121,7 @@ class ProductControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/products?priceFrom=1&priceTo=3"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE);
     }
 
     @Test
@@ -130,7 +131,7 @@ class ProductControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/products?sortBy=name"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_SORTED_BY_NAME_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_SORTED_BY_NAME_RESPONSE);
     }
 
     @Test
@@ -140,21 +141,10 @@ class ProductControllerIntegrationTest {
         ResponseEntity<String> actualResponse = this.restTemplate
                 .exchange(createURLWithPort("/api/products?sortBy=price"), HttpMethod.GET, httpEntity, String.class);
         assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE.replaceAll("[\\s+\\r\\n]", ""));
+        assertThat(actualResponse.getBody()).isEqualTo(GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE);
     }
 
     private String createURLWithPort(String uri) {
         return "http://localhost:" + port + uri;
-    }
-
-    private static String getFileContent(String filePath) {
-        ClassPathResource resource =
-                new ClassPathResource(filePath, ProductControllerIntegrationTest.class.getClassLoader());
-        try {
-            return new String(Files.readAllBytes(resource.getFile().toPath()), StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("Cannot read the expected data from json file!", e);
-        }
-
     }
 }

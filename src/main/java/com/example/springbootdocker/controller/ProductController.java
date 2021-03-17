@@ -6,6 +6,7 @@ import com.example.springbootdocker.request.ProductRequest;
 import com.example.springbootdocker.response.PageResponse;
 import com.example.springbootdocker.response.ProductResponse;
 import com.example.springbootdocker.service.ProductService;
+import com.example.springbootdocker.utils.PageResponseUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,15 +66,7 @@ public class ProductController {
                 = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Product> productPage = productService.getAllProducts(name, priceFrom, priceTo, pageRequest);
 
-        return PageResponse.<Product>builder()
-                .content(productPage.getContent())
-                .size(productPage.getSize())
-                .page(productPage.getNumber())
-                .sortBy(sortBy)
-                .direction(direction)
-                .totalElements(productPage.getTotalElements())
-                .totalPages(productPage.getTotalPages())
-                .build();
+        return PageResponseUtils.getProductPageResponse(direction, sortBy, productPage);
     }
 
     @PutMapping(path = "/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

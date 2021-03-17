@@ -3,6 +3,7 @@ package com.example.springbootdocker.service.impl;
 import com.example.springbootdocker.dao.CategoryRepository;
 import com.example.springbootdocker.entity.CategoryEntity;
 import com.example.springbootdocker.exception.CategoryNotFoundException;
+import com.example.springbootdocker.exception.ProductNotFoundException;
 import com.example.springbootdocker.mapper.CategoryToCategoryEntityMapper;
 import com.example.springbootdocker.model.Category;
 import com.example.springbootdocker.request.CategoryRequest;
@@ -33,18 +34,16 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public Category getCategoryById(Long id) {
-        Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(id);
-        if (!categoryEntityOptional.isPresent()) {
+        return categoryRepository.findById(id).map(categoryToCategoryEntityMapper::mapToCategory).orElseThrow(() -> {
             log.info("Category with id {} is not found.", id);
-            throw new CategoryNotFoundException(id);
-        }
-        return categoryToCategoryEntityMapper.mapToCategory(categoryEntityOptional.get());
+            return new CategoryNotFoundException(id);
+        });
     }
 
     @Transactional
     @Override
     public Category createCategory(Category category) {
-        category.setProductCount(0); // to remove
+        category.setProductCount(0);
         CategoryEntity createdCategoryEntity = categoryRepository.save(categoryToCategoryEntityMapper.mapToCategoryEntity(category));
         Category createdCategory = categoryToCategoryEntityMapper.mapToCategory(createdCategoryEntity);
         log.info("Category with id {} is created.", createdCategory.getId());

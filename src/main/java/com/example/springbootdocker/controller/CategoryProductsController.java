@@ -1,9 +1,9 @@
 package com.example.springbootdocker.controller;
 
-import com.example.springbootdocker.model.Category;
 import com.example.springbootdocker.model.Product;
 import com.example.springbootdocker.response.PageResponse;
 import com.example.springbootdocker.service.ProductService;
+import com.example.springbootdocker.utils.PageResponseUtils;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +32,9 @@ public class CategoryProductsController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get products by category ID.", response = Product.class)
     public PageResponse<Product> retrieveAllProductsInCategory(@PathVariable Long categoryId, @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-                                             @RequestParam(value = "size", defaultValue = "10", required = false) int size,
-                                             @RequestParam(value = "direction", defaultValue = "asc", required = false) String direction,
-                                             @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
+                                                               @RequestParam(value = "size", defaultValue = "10", required = false) int size,
+                                                               @RequestParam(value = "direction", defaultValue = "asc", required = false) String direction,
+                                                               @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
                                                                @RequestParam(value = "name", required = false) String name,
                                                                @RequestParam(value = "priceFrom", required = false) Long priceFrom,
                                                                @RequestParam(value = "priceTo", required = false) Long priceTo) {
@@ -43,15 +43,7 @@ public class CategoryProductsController {
         PageRequest pageRequest
                 = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Product> productsInCategoryPage = productService.getAllProducts(categoryId, name, priceFrom, priceTo, pageRequest);
-        return PageResponse.<Product>builder()
-                .content(productsInCategoryPage.getContent())
-                .size(productsInCategoryPage.getSize())
-                .page(productsInCategoryPage.getNumber())
-                .sortBy(sortBy)
-                .direction(direction)
-                .totalElements(productsInCategoryPage.getTotalElements())
-                .totalPages(productsInCategoryPage.getTotalPages())
-                .build();
+        return PageResponseUtils.getProductPageResponse(direction, sortBy, productsInCategoryPage);
     }
 
     @PostMapping(path = "/{productId}")

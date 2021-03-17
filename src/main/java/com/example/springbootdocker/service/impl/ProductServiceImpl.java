@@ -2,6 +2,7 @@ package com.example.springbootdocker.service.impl;
 
 import com.example.springbootdocker.dao.ProductRepository;
 import com.example.springbootdocker.entity.ProductEntity;
+import com.example.springbootdocker.exception.CategoryNotFoundException;
 import com.example.springbootdocker.exception.ProductNotFoundException;
 import com.example.springbootdocker.mapper.CategoryToCategoryEntityMapper;
 import com.example.springbootdocker.mapper.ProductToProductEntityMapper;
@@ -45,13 +46,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public Product  getProductById(Long id) {
-        Optional<ProductEntity> productEntityOptional = productRepository.findById(id);
-        if (!productEntityOptional.isPresent()) {
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).map(productToProductEntityMapper::mapToProduct).orElseThrow(() -> {
             log.info("Product with id {} is not found.", id);
-            throw new ProductNotFoundException(id);
-        }
-        return productToProductEntityMapper.mapToProduct(productEntityOptional.get());
+            return new ProductNotFoundException(id);
+        });
     }
 
     @Transactional
