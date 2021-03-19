@@ -1,0 +1,22 @@
+{
+  "page": 0,
+  "size": 10,
+  "sortBy": "id",
+  "direction": "asc",
+  "totalPages": 1,
+  "totalElements": 2,
+  "content": [
+    {
+      "id": 1,
+      "productCount": 0,
+      "name": "food",
+      "products": []
+    },
+    {
+      "id": 2,
+      "productCount": 0,
+      "name": "beverages",
+      "products": []
+    }
+  ]
+}

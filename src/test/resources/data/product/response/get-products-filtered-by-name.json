@@ -1,0 +1,16 @@
+{
+  "page": 0,
+  "size": 10,
+  "sortBy": "id",
+  "direction": "asc",
+  "totalPages": 1,
+  "totalElements": 1,
+  "content": [
+    {
+      "id": 4,
+      "price": 1.00,
+      "name": "milk",
+      "categories": []
+    }
+  ]
+}
