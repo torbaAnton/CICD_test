@@ -43,7 +43,7 @@ public class CategoryProductsController {
         PageRequest pageRequest
                 = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Product> productsInCategoryPage = productService.getAllProducts(categoryId, name, priceFrom, priceTo, pageRequest);
-        return PageResponseUtils.getProductPageResponse(direction, sortBy, productsInCategoryPage);
+        return PageResponseUtils.getPageResponse(direction, sortBy, productsInCategoryPage);
     }
 
     @PostMapping(path = "/{productId}")

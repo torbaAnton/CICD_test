@@ -66,7 +66,7 @@ public class ProductController {
                 = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Product> productPage = productService.getAllProducts(name, priceFrom, priceTo, pageRequest);
 
-        return PageResponseUtils.getProductPageResponse(direction, sortBy, productPage);
+        return PageResponseUtils.getPageResponse(direction, sortBy, productPage);
     }
 
     @PutMapping(path = "/{productId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

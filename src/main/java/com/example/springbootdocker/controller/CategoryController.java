@@ -63,7 +63,7 @@ public class CategoryController {
                 = PageRequest.of(page, size, Sort.Direction.fromString(direction), sortBy);
         Page<Category> categoryPage = categoryService.getAllCategories(pageRequest);
 
-        return PageResponseUtils.getCategoryPageResponse(direction, sortBy, categoryPage);
+        return PageResponseUtils.getPageResponse(direction, sortBy, categoryPage);
     }
 
     @PutMapping(path = "/{categoryId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
