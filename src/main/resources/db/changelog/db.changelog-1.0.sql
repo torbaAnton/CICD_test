@@ -1,7 +1,5 @@
-DROP TABLE IF EXISTS `PRODUCTS_CATEGORIES`;
-DROP TABLE IF EXISTS `PRODUCTS`;
-DROP TABLE IF EXISTS `CATEGORIES`;
-
+--liquibase formatted sql
+--changeset anton_torba:create-categories-table
 CREATE TABLE CATEGORIES
 (
     ID BIGINT AUTO_INCREMENT NOT NULL,
@@ -10,6 +8,7 @@ CREATE TABLE CATEGORIES
     CONSTRAINT CONSTRAINT_6 PRIMARY KEY (ID)
 );
 
+--changeset anton_torba:create-products-table
 CREATE TABLE PRODUCTS
 (
     ID BIGINT AUTO_INCREMENT NOT NULL,
@@ -18,28 +17,31 @@ CREATE TABLE PRODUCTS
     CONSTRAINT CONSTRAINT_F PRIMARY KEY (ID)
 );
 
+--changeset anton_torba:create-products_categories-table
 CREATE TABLE PRODUCTS_CATEGORIES
 (
     PRODUCT_ID BIGINT NOT NULL,
     CATEGORY_ID BIGINT NOT NULL
 );
 
+--changeset anton_torba:indexing_categories
 CREATE INDEX CATEGORY_ID_KEY_INDEX_6 ON PRODUCTS_CATEGORIES(CATEGORY_ID);
 
+--changeset anton_torba:indexing_products
 CREATE INDEX PRODUCT_ID_KEY_INDEX_6 ON PRODUCTS_CATEGORIES(PRODUCT_ID);
 
+--changeset anton_torba:add_category_constraint
 ALTER TABLE PRODUCTS_CATEGORIES
 ADD CONSTRAINT CATEGORY_ID_KEY
 FOREIGN KEY (CATEGORY_ID)
 REFERENCES CATEGORIES (ID)
 ON UPDATE RESTRICT ON DELETE RESTRICT;
 
+--changeset anton_torba:add_product_constraint
 ALTER TABLE PRODUCTS_CATEGORIES
 ADD CONSTRAINT PRODUCT_ID_KEY
 FOREIGN KEY (PRODUCT_ID)
 REFERENCES PRODUCTS (ID)
 ON UPDATE RESTRICT ON DELETE RESTRICT;
 
---initial data
-INSERT INTO products (name, price) VALUES ('meat', '5'), ('cheese', '2'), ('eggs', '3'), ('milk', '1');
-INSERT INTO categories (name, product_count) VALUES ('food', '0'), ('beverages', '0');
+
