@@ -7,17 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:test_data.sql"})
+@ActiveProfiles("test")
 class ProductControllerIntegrationTest {
 
     private static final String CREATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/create-product.json", ProductControllerIntegrationTest.class);
@@ -72,6 +68,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldCreateProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(CREATE_PRODUCT_REQUEST, httpHeaders);
@@ -83,6 +80,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldUpdateProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(UPDATE_PRODUCT_REQUEST, httpHeaders);
@@ -94,6 +92,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRemoveProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(null, httpHeaders);

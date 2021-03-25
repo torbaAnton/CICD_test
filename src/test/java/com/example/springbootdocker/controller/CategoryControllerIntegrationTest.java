@@ -12,7 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:test_data.sql"})
+@ActiveProfiles("test")
 class CategoryControllerIntegrationTest {
 
     private static final String CREATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/create-category.json", CategoryControllerIntegrationTest.class);
@@ -65,6 +66,7 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldCreateCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(CREATE_CATEGORY_REQUEST, httpHeaders);
@@ -76,6 +78,7 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldUpdateCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(UPDATE_CATEGORY_REQUEST, httpHeaders);
@@ -87,6 +90,7 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRemoveCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(null, httpHeaders);

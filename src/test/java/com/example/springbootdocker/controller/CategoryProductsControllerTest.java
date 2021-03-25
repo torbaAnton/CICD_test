@@ -12,7 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:test_data.sql"})
+@ActiveProfiles("test")
 class CategoryProductsControllerTest {
 
     private static final String GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id.json", CategoryProductsControllerTest.class);
@@ -40,6 +41,7 @@ class CategoryProductsControllerTest {
 
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRetrieveProductsByCategoryId() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -52,6 +54,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldAssignCategoryToProduct() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -62,6 +65,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldUnassignCategoryFromProduct() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -74,6 +78,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRetrieveProductsByCategoryIdFilteredByNameContaining() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -88,6 +93,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRetrieveProductsByCategoryIdFilteredByPriceInRange() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
