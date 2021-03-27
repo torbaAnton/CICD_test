@@ -12,28 +12,29 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Initial data inserted to db through resources/test_data.sql script
+ * Initial data inserted to db through migration init data scripts
  */
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:test_data.sql"})
-class CategoryControllerIntegrationTest {
+@ActiveProfiles("test")
+class CategoryControllerIT {
 
-    private static final String CREATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/create-category.json", CategoryControllerIntegrationTest.class);
-    private static final String UPDATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/update-category.json", CategoryControllerIntegrationTest.class);
+    private static final String CREATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/create-category.json", CategoryControllerIT.class);
+    private static final String UPDATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/update-category.json", CategoryControllerIT.class);
 
-    private static final String GET_CATEGORIES_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories.json", CategoryControllerIntegrationTest.class);
-    private static final String GET_CATEGORIES_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-name.json", CategoryControllerIntegrationTest.class);
-    private static final String GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-productCount.json", CategoryControllerIntegrationTest.class);
-    private static final String GET_CATEGORY_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-category-by-id.json", CategoryControllerIntegrationTest.class);
-    private static final String CREATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/create-category.json", CategoryControllerIntegrationTest.class);
-    private static final String UPDATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/update-category.json", CategoryControllerIntegrationTest.class);
+    private static final String GET_CATEGORIES_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories.json", CategoryControllerIT.class);
+    private static final String GET_CATEGORIES_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-name.json", CategoryControllerIT.class);
+    private static final String GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-productCount.json", CategoryControllerIT.class);
+    private static final String GET_CATEGORY_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-category-by-id.json", CategoryControllerIT.class);
+    private static final String CREATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/create-category.json", CategoryControllerIT.class);
+    private static final String UPDATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/update-category.json", CategoryControllerIT.class);
 
     @LocalServerPort
     private int port;
@@ -65,6 +66,7 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldCreateCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(CREATE_CATEGORY_REQUEST, httpHeaders);
@@ -76,6 +78,7 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldUpdateCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(UPDATE_CATEGORY_REQUEST, httpHeaders);
@@ -87,6 +90,7 @@ class CategoryControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRemoveCategory() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(null, httpHeaders);

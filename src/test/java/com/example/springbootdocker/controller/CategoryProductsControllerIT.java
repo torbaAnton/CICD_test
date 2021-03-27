@@ -12,22 +12,23 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Initial data inserted to db through resources/test_data.sql script
+ * Initial data inserted to db through migration init data scripts
  */
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:test_data.sql"})
-class CategoryProductsControllerTest {
+@ActiveProfiles("test")
+class CategoryProductsControllerIT {
 
-    private static final String GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id.json", CategoryProductsControllerTest.class);
-    private static final String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-name.json", CategoryProductsControllerTest.class);
-    private static final String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-price-in-range.json", CategoryProductsControllerTest.class);
+    private static final String GET_PRODUCTS_BY_CATEGORY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id.json", CategoryProductsControllerIT.class);
+    private static final String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-name.json", CategoryProductsControllerIT.class);
+    private static final String GET_PRODUCTS_BY_CATEGORY_ID_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/category_products/response/get-products-by-category-id-filtered-by-price-in-range.json", CategoryProductsControllerIT.class);
 
     @LocalServerPort
     private int port;
@@ -40,6 +41,7 @@ class CategoryProductsControllerTest {
 
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRetrieveProductsByCategoryId() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -52,6 +54,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldAssignCategoryToProduct() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -62,6 +65,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldUnassignCategoryFromProduct() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -74,6 +78,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRetrieveProductsByCategoryIdFilteredByNameContaining() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 
@@ -88,6 +93,7 @@ class CategoryProductsControllerTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRetrieveProductsByCategoryIdFilteredByPriceInRange() {
         httpEntity = new HttpEntity<>(null, httpHeaders);
 

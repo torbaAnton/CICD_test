@@ -7,40 +7,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Initial data inserted to db through resources/test_data.sql script
+ * Initial data inserted to db through migration init data scripts
  */
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Sql(scripts = {"classpath:test_data.sql"})
-class ProductControllerIntegrationTest {
+@ActiveProfiles("test")
+class ProductControllerIT {
 
-    private static final String CREATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/create-product.json", ProductControllerIntegrationTest.class);
-    private static final String UPDATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/update-product.json", ProductControllerIntegrationTest.class);
+    private static final String CREATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/create-product.json", ProductControllerIT.class);
+    private static final String UPDATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/update-product.json", ProductControllerIT.class);
 
-    private static final String GET_PRODUCTS_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-name.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-price-in-range.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-name.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-price.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCT_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-product-by-id.json", ProductControllerIntegrationTest.class);
-    private static final String CREATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/create-product.json", ProductControllerIntegrationTest.class);
-    private static final String UPDATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/update-product.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCTS_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-name.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-price-in-range.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-name.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-price.json", ProductControllerIT.class);
+    private static final String GET_PRODUCT_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-product-by-id.json", ProductControllerIT.class);
+    private static final String CREATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/create-product.json", ProductControllerIT.class);
+    private static final String UPDATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/update-product.json", ProductControllerIT.class);
 
     @LocalServerPort
     private int port;
@@ -72,6 +68,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldCreateProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(CREATE_PRODUCT_REQUEST, httpHeaders);
@@ -83,6 +80,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldUpdateProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(UPDATE_PRODUCT_REQUEST, httpHeaders);
@@ -94,6 +92,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void shouldRemoveProduct() {
         httpHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         httpEntity = new HttpEntity<>(null, httpHeaders);

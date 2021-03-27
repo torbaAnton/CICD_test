@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/db.changelog-v1.0-schema.sql
+  - includeAll:
+      path: db/changelog/init/local
+      context: local
+  - includeAll:
+      path: db/changelog/init/dev
+      context: dev
+  - includeAll:
+      path: db/changelog/init/test
+      context: test
