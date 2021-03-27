@@ -18,23 +18,23 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Initial data inserted to db through resources/test_data.sql script
+ * Initial data inserted to db through migration init data scripts
  */
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class CategoryControllerIntegrationTest {
+class CategoryControllerIT {
 
-    private static final String CREATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/create-category.json", CategoryControllerIntegrationTest.class);
-    private static final String UPDATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/update-category.json", CategoryControllerIntegrationTest.class);
+    private static final String CREATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/create-category.json", CategoryControllerIT.class);
+    private static final String UPDATE_CATEGORY_REQUEST = TestHelperUtils.getFileContent("data/category/request/update-category.json", CategoryControllerIT.class);
 
-    private static final String GET_CATEGORIES_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories.json", CategoryControllerIntegrationTest.class);
-    private static final String GET_CATEGORIES_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-name.json", CategoryControllerIntegrationTest.class);
-    private static final String GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-productCount.json", CategoryControllerIntegrationTest.class);
-    private static final String GET_CATEGORY_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-category-by-id.json", CategoryControllerIntegrationTest.class);
-    private static final String CREATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/create-category.json", CategoryControllerIntegrationTest.class);
-    private static final String UPDATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/update-category.json", CategoryControllerIntegrationTest.class);
+    private static final String GET_CATEGORIES_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories.json", CategoryControllerIT.class);
+    private static final String GET_CATEGORIES_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-name.json", CategoryControllerIT.class);
+    private static final String GET_CATEGORIES_SORTED_BY_PRODUCT_COUNT_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-categories-sorted-by-productCount.json", CategoryControllerIT.class);
+    private static final String GET_CATEGORY_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/category/response/get-category-by-id.json", CategoryControllerIT.class);
+    private static final String CREATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/create-category.json", CategoryControllerIT.class);
+    private static final String UPDATE_CATEGORY_RESPONSE = TestHelperUtils.getFileContent("data/category/response/update-category.json", CategoryControllerIT.class);
 
     @LocalServerPort
     private int port;

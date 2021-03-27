@@ -18,25 +18,25 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Initial data inserted to db through resources/test_data.sql script
+ * Initial data inserted to db through migration init data scripts
  */
 
 @SpringBootTest(classes = SpringBootDockerApplication.class,
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class ProductControllerIntegrationTest {
+class ProductControllerIT {
 
-    private static final String CREATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/create-product.json", ProductControllerIntegrationTest.class);
-    private static final String UPDATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/update-product.json", ProductControllerIntegrationTest.class);
+    private static final String CREATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/create-product.json", ProductControllerIT.class);
+    private static final String UPDATE_PRODUCT_REQUEST = TestHelperUtils.getFileContent("data/product/request/update-product.json", ProductControllerIT.class);
 
-    private static final String GET_PRODUCTS_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-name.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-price-in-range.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-name.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-price.json", ProductControllerIntegrationTest.class);
-    private static final String GET_PRODUCT_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-product-by-id.json", ProductControllerIntegrationTest.class);
-    private static final String CREATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/create-product.json", ProductControllerIntegrationTest.class);
-    private static final String UPDATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/update-product.json", ProductControllerIntegrationTest.class);
+    private static final String GET_PRODUCTS_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_FILTERED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-name.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_FILTERED_BY_PRICE_IN_RANGE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-filtered-by-price-in-range.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_SORTED_BY_NAME_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-name.json", ProductControllerIT.class);
+    private static final String GET_PRODUCTS_SORTED_BY_PRICE_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-products-sorted-by-price.json", ProductControllerIT.class);
+    private static final String GET_PRODUCT_BY_ID_RESPONSE = TestHelperUtils.getFileContent("data/product/response/get-product-by-id.json", ProductControllerIT.class);
+    private static final String CREATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/create-product.json", ProductControllerIT.class);
+    private static final String UPDATE_PRODUCT_RESPONSE = TestHelperUtils.getFileContent("data/product/response/update-product.json", ProductControllerIT.class);
 
     @LocalServerPort
     private int port;

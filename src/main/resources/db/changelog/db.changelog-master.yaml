@@ -1,7 +1,12 @@
 databaseChangeLog:
-      # schema
   - include:
-      file: db/changelog/db.changelog-1.0.sql
-      # data
-  - include:
-      file: db/changelog/db.changelog-2.0.sql
+      file: db/changelog/db.changelog-v1.0-schema.sql
+  - includeAll:
+      path: db/changelog/init/local
+      context: local
+  - includeAll:
+      path: db/changelog/init/dev
+      context: dev
+  - includeAll:
+      path: db/changelog/init/test
+      context: test
