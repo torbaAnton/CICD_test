@@ -17,7 +17,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/actuator/health", "/check").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .oauth2Login()
-                .defaultSuccessUrl("/products");
+                .oauth2Login();
     }
 }
